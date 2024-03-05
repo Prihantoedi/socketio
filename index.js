@@ -1,15 +1,23 @@
 const express = require('express');
 const { createServer } = require('node:http');
+const { join } = require('node:path');
+const { Server } = require('socket.io');
 
 const app = express();
-
 const server = createServer(app);
+const io = new Server(server);
 // const __dirname = 'pages/';
 
 app.get('/', (req, res) => {
-    // res.send('<h1>Hello World</h1>');
-    console.log(__dirname);
     res.sendFile(__dirname + '\\pages\\index.html');
+});
+
+io.on('connection', (socket) => {
+    console.log('a user connected');
+
+    socket.on('disconnect', () => {
+        console.log('user disconnected');
+    });
 });
 
 server.listen(3000, () => {
